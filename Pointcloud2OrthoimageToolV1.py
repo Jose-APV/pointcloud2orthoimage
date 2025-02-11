@@ -260,7 +260,7 @@ def align_sidewalk_surface(pcd,bool_visualize=False,bool_repeate=True,dist_thres
 def main(glb_file_path,pointName='5mm_18_34_56',downsample=10,GSDmm2px=5,bool_alignOnly=False,b='win',bool_generate=False):
     print('$',pointName)
     bool_confirm=False
-    if b=='win':
+    if b=='win' or b =='mac':
         import pptk
         import open3d as o3d
         axis_mesh=o3d.geometry.TriangleMesh.create_coordinate_frame()  #o3d.geometry.TriangleMesh.create_mesh_coordinate_frame(size=5.0,origin=np.array([0.,0.,0.]))
@@ -358,7 +358,7 @@ def main(glb_file_path,pointName='5mm_18_34_56',downsample=10,GSDmm2px=5,bool_al
         print('[Piontcloud aligment only]')
         return False
     #region ouput
-    if b=='win':
+    if b=='win' or b =='mac':
         grid_RGB,grid_ele,(ele_min,ele_max)=PointCloud2Orthoimage2(np.array(pcd_t.points),np.asarray(pcd_t.colors)*65535,downsample=downsample,GSDmm2px=GSDmm2px)  #PointCloud2Orthoimage(PCD,downsample=0,GSDmm2px=5)
     if b=='server':
         grid_RGB,grid_ele,(ele_min,ele_max)=PointCloud2Orthoimage2(np.array(points),np.asarray(colors)*65535,downsample=downsample,GSDmm2px=GSDmm2px)  #PointCloud2Orthoimage(PCD,downsample=0,GSDmm2px=5)
@@ -382,19 +382,34 @@ def main(glb_file_path,pointName='5mm_18_34_56',downsample=10,GSDmm2px=5,bool_al
 
 #-------
 if __name__ == '__main__':
-    if os.path.exists('D:/'):
-        glb_file_path='D:/CentOS/Sidewalk/'  # screenshot saving path
-        b='win'
-        cpu=3
-        import open3d as o3d
-    elif os.path.exists('/data/'):
-        glb_file_path='/data/Sidewalk/'  # screenshot saving path
-        b='server'
-        cpu=4
-    if b=='win':
-        PC_Name=['5mm_18_34_56']
-        #PC_Name.reverse()
-        for i in PC_Name:
-            main(pointName=i,glb_file_path=glb_file_path,GSDmm2px=5,bool_alignOnly=0,b=b,bool_generate=0)
-    else:
-        main(pointName='5mm_18_34_56',glb_file_path=glb_file_path,GSDmm2px=5,bool_alignOnly=False,b=b)# centOS cannot run open3D
+    fileNumber = 0
+    fileNumber += 1
+    pcFolderPath = '/Users/jose/Downloads/pointcloud_files/'
+    while os.path.exists(pcFolderPath + 'sidewalk_' + str(fileNumber) + '.las'):
+        if os.path.exists(pcFolderPath + 'Demo/sidewalk_' + str(fileNumber)):
+            fileNumber += 1
+            continue
+        if os.path.exists('C:/'):
+            glb_file_path = pcFolderPath  # screenshot saving path
+            b='win'
+            cpu=3
+            import open3d as o3d
+        elif os.path.exists('/Users/'):
+            glb_file_path = pcFolderPath
+            b = 'mac'
+            cpu = 4
+            import open3d as o3d
+        elif os.path.exists('/data/'):
+            glb_file_path=pcFolderPath  # screenshot saving path
+            b='server'
+            cpu=4
+
+        fileName = 'sidewalk_' + str(fileNumber)
+        if b=='win':
+            PC_Name=[fileName]
+            #PC_Name.reverse()
+            for i in PC_Name:
+                main(pointName=i,glb_file_path=glb_file_path,GSDmm2px=5,bool_alignOnly=0,b=b,bool_generate=0)
+        else:
+            main(pointName=fileName,glb_file_path=glb_file_path,GSDmm2px=5,bool_alignOnly=False,b=b)# centOS cannot run open3D
+        fileNumber += 1
