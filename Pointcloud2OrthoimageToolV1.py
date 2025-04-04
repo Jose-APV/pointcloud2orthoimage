@@ -384,9 +384,9 @@ def main(glb_file_path,pointName='5mm_18_34_56',downsample=10,GSDmm2px=5,bool_al
 if __name__ == '__main__':
     fileNumber = 0
     fileNumber += 1
-    pcFolderPath = '/Users/jose/Downloads/pointcloud_files/'
+    pcFolderPath = '/Users/jose/pointcloud_files/' # Enter your path here ! :D
     while os.path.exists(pcFolderPath + 'sidewalk_' + str(fileNumber) + '.las'):
-        if os.path.exists(pcFolderPath + 'Demo/sidewalk_' + str(fileNumber)):
+        if os.path.exists(pcFolderPath + 'Demo/sidewalk_' + str(fileNumber)) or os.path.exists(pcFolderPath + 'measured_sidewalks/sidewalk_' + str(fileNumber)):
             fileNumber += 1
             continue
         if os.path.exists('C:/'):
